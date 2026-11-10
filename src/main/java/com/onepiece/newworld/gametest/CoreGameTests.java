@@ -184,7 +184,9 @@ public final class CoreGameTests {
         helper.getLevel().addFreshEntity(projectile);
         helper.succeedWhen(() -> {
             helper.assertTrue(target.getHealth() < target.getMaxHealth(), "Снаряд ещё не попал");
-            helper.assertTrue(target.isOnFire(), "Огненный снаряд должен поджигать");
+            helper.assertTrue(target.isOnFire(), "Огненный снаряд должен поджигать: fireTicks=" + target.getRemainingFireTicks()
+                    + ", hp=" + target.getHealth() + ", source=" + (target.getLastDamageSource() == null ? "null" : target.getLastDamageSource().getMsgId())
+                    + ", projectileAlive=" + projectile.isAlive() + ", tick=" + helper.getTick());
         });
     }
 }

@@ -184,13 +184,20 @@ public class SlashProjectile extends Projectile {
         double half = width() / 2.0;
         int steps = Math.max(1, Mth.ceil(length / STEP));
         LongOpenHashSet visited = new LongOpenHashSet();
+        LongOpenHashSet blocked = new LongOpenHashSet();
         Entity owner = getOwner();
 
         for (int s = 1; s <= steps; s++) {
             Vec3 point = from.add(dir.scale(length * s / steps));
             for (double offset = -half; offset <= half + 1.0E-6; offset += STEP) {
                 BlockPos pos = BlockPos.containing(point.add(side.scale(offset)));
-                if (!visited.add(pos.asLong())) {
+                boolean center = Math.abs(offset) < STEP;
+                long key = pos.asLong();
+                if (!visited.add(key)) {
+                    // Блок уже проверен краем удара; если он не поддался и стоит по центру — удар гаснет.
+                    if (center && blocked.contains(key)) {
+                        return false;
+                    }
                     continue;
                 }
                 DestructionManager.CutResult result = DestructionManager.tryCut(level, pos, power, owner, cutCount % 3 == 0);
@@ -201,8 +208,11 @@ public class SlashProjectile extends Projectile {
                     }
                 } else if (result == DestructionManager.CutResult.LIMIT) {
                     return true;
-                } else if (result == DestructionManager.CutResult.BLOCKED && Math.abs(offset) < STEP) {
-                    return false;
+                } else if (result == DestructionManager.CutResult.BLOCKED) {
+                    if (center) {
+                        return false;
+                    }
+                    blocked.add(key);
                 }
             }
         }

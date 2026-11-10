@@ -172,7 +172,8 @@ public final class CoreGameTests {
 
     @GameTest(templateNamespace = NS, template = TEMPLATE, timeoutTicks = 60)
     public static void fireProjectileHurtsTarget(GameTestHelper helper) {
-        // Кадавр (husk) не горит на солнце, поэтому поджог точно от снаряда.
+        // Кадавр (husk) не горит на солнце, поэтому поджог точно от снаряда. Дождь тушит огонь — включаем ясную погоду.
+        helper.getLevel().setWeatherParameters(6000, 0, false, false);
         Zombie target = helper.spawnWithNoFreeWill(EntityType.HUSK, 2, 1, 4);
         ElementalProjectile projectile = new ElementalProjectile(ModEntities.ELEMENTAL_PROJECTILE.get(), helper.getLevel());
         Vec3 start = helper.absoluteVec(new Vec3(2.5, 1.8, 0.5));

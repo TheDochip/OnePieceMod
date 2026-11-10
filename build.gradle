@@ -36,6 +36,15 @@ repositories {
             includeGroup('com.eliotlash.mclib')
         }
     }
+    // Player Animation Library: анимации тела игрока (удары, блок, уклонение)
+    maven {
+        name = 'RedlanceMinecraft'
+        url = 'https://repo.redlance.org/public'
+        content {
+            includeGroupByRegex('com\\.zigythebird.*')
+            includeGroup('team.unnamed')
+        }
+    }
 }
 
 base {
@@ -125,6 +134,7 @@ configurations {
 
 dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    implementation "com.zigythebird.playeranim:PlayerAnimationLibNeo:${player_anim_version}"
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

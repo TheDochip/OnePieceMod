@@ -33,3 +33,10 @@ A fan-made pirate RPG mod: devil fruits, Haki, bounties, pirates and the Marines
     versionRange="[${geckolib_version},)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="player_animation_library"
+    type="required"
+    versionRange="[1.1.6,)"
+    ordering="NONE"
+    side="BOTH"

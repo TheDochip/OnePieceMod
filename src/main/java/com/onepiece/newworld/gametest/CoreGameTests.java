@@ -43,6 +43,7 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @EventBusSubscriber(modid = OnePieceNewWorld.MODID)
 public final class CoreGameTests {
     private static final String NS = OnePieceNewWorld.MODID;
+    /** Шаблон 5×4×5 с каменным полом. В координатах теста пол находится на y=1, существа ставятся на y=2. */
     private static final String TEMPLATE = "empty";
 
     private CoreGameTests() {
@@ -55,7 +56,7 @@ public final class CoreGameTests {
 
     private static Player mockPlayer(GameTestHelper helper, ResourceLocation fruit) {
         Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-        player.moveTo(helper.absoluteVec(new Vec3(2.5, 1, 2.5)));
+        player.moveTo(helper.absoluteVec(new Vec3(2.5, 2, 2.5)));
         ModAttachments.get(player).setFruit(fruit);
         player.setHealth(20f);
         return player;
@@ -123,7 +124,7 @@ public final class CoreGameTests {
         player.hurt(player.damageSources().inFire(), 4f);
         helper.assertTrue(player.getHealth() == 20f, "Мера Мера получил урон от огня");
 
-        Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, 1, 1, 1);
+        Zombie zombie = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, 1, 2, 1);
         float energyBefore = ModAttachments.get(player).getEnergy();
         player.invulnerableTime = 0;
         player.hurt(player.damageSources().mobAttack(zombie), 4f);
@@ -150,11 +151,11 @@ public final class CoreGameTests {
 
     @GameTest(templateNamespace = NS, template = TEMPLATE)
     public static void npcsSpawnArmedAndMarinesHuntWantedPirates(GameTestHelper helper) {
-        PirateGrunt pirate = helper.spawnWithNoFreeWill(ModEntities.PIRATE_GRUNT.get(), 1, 1, 1);
+        PirateGrunt pirate = helper.spawnWithNoFreeWill(ModEntities.PIRATE_GRUNT.get(), 1, 2, 1);
         pirate.finalizeSpawn(helper.getLevel(), helper.getLevel().getCurrentDifficultyAt(pirate.blockPosition()), MobSpawnType.EVENT, null);
         helper.assertTrue(!pirate.getMainHandItem().isEmpty(), "Пират появился без оружия");
 
-        MarineRecruit marine = helper.spawnWithNoFreeWill(ModEntities.MARINE_RECRUIT.get(), 3, 1, 3);
+        MarineRecruit marine = helper.spawnWithNoFreeWill(ModEntities.MARINE_RECRUIT.get(), 3, 2, 3);
         marine.finalizeSpawn(helper.getLevel(), helper.getLevel().getCurrentDifficultyAt(marine.blockPosition()), MobSpawnType.EVENT, null);
         helper.assertTrue(!marine.getMainHandItem().isEmpty(), "Дозорный появился без оружия");
 
@@ -174,9 +175,9 @@ public final class CoreGameTests {
     public static void fireProjectileHurtsTarget(GameTestHelper helper) {
         // Кадавр (husk) не горит на солнце, поэтому поджог точно от снаряда. Дождь тушит огонь — включаем ясную погоду.
         helper.getLevel().setWeatherParameters(6000, 0, false, false);
-        Zombie target = helper.spawnWithNoFreeWill(EntityType.HUSK, 2, 1, 4);
+        Zombie target = helper.spawnWithNoFreeWill(EntityType.HUSK, 2, 2, 4);
         ElementalProjectile projectile = new ElementalProjectile(ModEntities.ELEMENTAL_PROJECTILE.get(), helper.getLevel());
-        Vec3 start = helper.absoluteVec(new Vec3(2.5, 1.8, 0.5));
+        Vec3 start = helper.absoluteVec(new Vec3(2.5, 2.8, 0.5));
         projectile.setPos(start.x, start.y, start.z);
         projectile.setElement(ElementalProjectile.Element.FIRE);
         projectile.setNoGravity(true);

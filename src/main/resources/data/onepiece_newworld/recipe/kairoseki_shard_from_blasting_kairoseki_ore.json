@@ -1,0 +1,2 @@
+{"type": "minecraft:blasting", "category": "misc", "ingredient": {"item": "onepiece_newworld:kairoseki_ore"},
+ "result": {"id": "onepiece_newworld:kairoseki_shard"}, "experience": 0.8, "cookingtime": 100}

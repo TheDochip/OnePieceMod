@@ -1,0 +1,3 @@
+{"type": "minecraft:crafting_shaped", "category": "equipment",
+ "pattern": [" K", "IK", "S "], "key": {"K": {"item": "onepiece_newworld:kairoseki_shard"}, "I": {"item": "minecraft:iron_ingot"}, "S": {"item": "minecraft:stick"}},
+ "result": {"id": "onepiece_newworld:kairoseki_jitte", "count": 1}}

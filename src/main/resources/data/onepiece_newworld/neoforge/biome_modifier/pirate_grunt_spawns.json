@@ -1,0 +1,2 @@
+{"type": "neoforge:add_spawns", "biomes": "#minecraft:is_beach",
+ "spawners": {"type": "onepiece_newworld:pirate_grunt", "weight": 40, "minCount": 2, "maxCount": 4}}

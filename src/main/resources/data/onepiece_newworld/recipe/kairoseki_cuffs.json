@@ -1,0 +1,3 @@
+{"type": "minecraft:crafting_shaped", "category": "equipment",
+ "pattern": ["KCK"], "key": {"K": {"item": "onepiece_newworld:kairoseki_shard"}, "C": {"item": "minecraft:chain"}},
+ "result": {"id": "onepiece_newworld:kairoseki_cuffs", "count": 2}}

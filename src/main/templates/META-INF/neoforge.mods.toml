@@ -1,0 +1,35 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+logoFile="logo.png"
+authors="Nikita"
+description='''
+Фанатский RPG-мод о пиратском мире: дьявольские фрукты, Хаки, награды за голову, пираты и Дозор.
+A fan-made pirate RPG mod: devil fruits, Haki, bounties, pirates and the Marines.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="geckolib"
+    type="required"
+    versionRange="[${geckolib_version},)"
+    ordering="NONE"
+    side="BOTH"

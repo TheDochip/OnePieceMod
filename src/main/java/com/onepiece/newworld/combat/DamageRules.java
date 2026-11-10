@@ -11,6 +11,7 @@ import com.onepiece.newworld.haki.HakiType;
 import com.onepiece.newworld.progression.PlayerData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -51,7 +52,7 @@ public final class DamageRules {
         if (attacker instanceof ServerPlayer attackerPlayer && attacker != victim) {
             applyAttackerBonuses(event, attackerPlayer, victim, melee);
         }
-        if (victim instanceof ServerPlayer victimPlayer) {
+        if (victim instanceof Player victimPlayer) {
             applyVictimRules(event, victimPlayer, source, attacker);
         }
     }
@@ -69,7 +70,7 @@ public final class DamageRules {
         }
     }
 
-    private static void applyVictimRules(LivingIncomingDamageEvent event, ServerPlayer victim, DamageSource source, Entity attacker) {
+    private static void applyVictimRules(LivingIncomingDamageEvent event, Player victim, DamageSource source, Entity attacker) {
         PlayerData data = ModAttachments.get(victim);
         DevilFruit fruit = FruitPowers.fruitOf(victim);
         boolean fromLiving = attacker instanceof LivingEntity && attacker != victim;
@@ -85,8 +86,10 @@ public final class DamageRules {
                 if (!victim.isCreative()) {
                     data.trySpendEnergy(LOGIA_DODGE_COST);
                 }
-                victim.serverLevel().sendParticles(fruit.elementParticle(), victim.getX(), victim.getY() + 1, victim.getZ(),
-                        20, 0.3, 0.6, 0.3, 0.05);
+                if (victim.level() instanceof ServerLevel level) {
+                    level.sendParticles(fruit.elementParticle(), victim.getX(), victim.getY() + 1, victim.getZ(),
+                            20, 0.3, 0.6, 0.3, 0.05);
+                }
                 event.setCanceled(true);
                 return;
             }
@@ -102,7 +105,9 @@ public final class DamageRules {
                 event.setCanceled(true);
                 return;
             }
-            HakiService.grantXp(victim, HakiType.OBSERVATION, 2);
+            if (victim instanceof ServerPlayer serverVictim) {
+                HakiService.grantXp(serverVictim, HakiType.OBSERVATION, 2);
+            }
         }
     }
 

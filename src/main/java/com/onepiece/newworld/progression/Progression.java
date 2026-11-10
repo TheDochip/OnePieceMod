@@ -7,6 +7,20 @@ import net.minecraft.network.chat.MutableComponent;
 public final class Progression {
     public static final int MAX_LEVEL = 100;
     public static final int MAX_MASTERY = 1000;
+    /** Мастерство боевого стиля: пороги ступеней 0/100/300/700/1500. */
+    public static final int MAX_WEAPON_MASTERY = 1500;
+    private static final int[] WEAPON_TIERS = {0, 100, 300, 700, 1500};
+
+    /** Ступень мастерства стиля: 0..4. */
+    public static int weaponTier(int mastery) {
+        int tier = 0;
+        for (int i = 0; i < WEAPON_TIERS.length; i++) {
+            if (mastery >= WEAPON_TIERS[i]) {
+                tier = i;
+            }
+        }
+        return tier;
+    }
 
     /** Заслуги, нужные для званий Дозора (индекс = звание). */
     private static final int[] MARINE_RANK_THRESHOLDS = {0, 50, 150, 400, 900, 1800, 3500, 6000, 10000, 16000};

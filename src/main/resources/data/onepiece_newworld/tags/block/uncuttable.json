@@ -1,0 +1,8 @@
+{
+  "values": [
+    "onepiece_newworld:kairoseki_ore",
+    "onepiece_newworld:deepslate_kairoseki_ore",
+    "onepiece_newworld:kairoseki_block",
+    {"id": "minecraft:reinforced_deepslate", "required": false}
+  ]
+}

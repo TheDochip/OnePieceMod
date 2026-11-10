@@ -2,6 +2,7 @@ package com.onepiece.newworld.client;
 
 import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.client.render.HumanoidNpcRenderer;
+import com.onepiece.newworld.client.render.SlashRenderer;
 import com.onepiece.newworld.entities.ModEntities;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -34,6 +35,7 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.ELEMENTAL_PROJECTILE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0f, true));
+        event.registerEntityRenderer(ModEntities.SLASH.get(), SlashRenderer::new);
         event.registerEntityRenderer(ModEntities.PIRATE_GRUNT.get(),
                 ctx -> new HumanoidNpcRenderer<>(ctx, OnePieceNewWorld.id("textures/entity/pirate_grunt.png")));
         event.registerEntityRenderer(ModEntities.MARINE_RECRUIT.get(),

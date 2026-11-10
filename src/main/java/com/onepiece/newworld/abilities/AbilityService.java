@@ -1,5 +1,7 @@
 package com.onepiece.newworld.abilities;
 
+import com.onepiece.newworld.combat.CombatStyle;
+import com.onepiece.newworld.combat.SwordTechniques;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.core.ModConfig;
 import com.onepiece.newworld.fruits.DevilFruit;
@@ -21,6 +23,12 @@ public final class AbilityService {
 
     public static void tryActivate(ServerPlayer player, int slot) {
         if (player.isSpectator() || !player.isAlive()) {
+            return;
+        }
+        // С мечом в руке клавиши отдают техникам меча; с Shift — способностям фрукта.
+        CombatStyle style = CombatStyle.of(player);
+        if (style != null && style.usesSword() && !player.isShiftKeyDown()) {
+            SwordTechniques.tryUse(player, style, slot);
             return;
         }
         PlayerData data = ModAttachments.get(player);

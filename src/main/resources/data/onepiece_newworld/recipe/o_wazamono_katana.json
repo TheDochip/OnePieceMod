@@ -1,0 +1,3 @@
+{"type": "minecraft:crafting_shapeless", "category": "equipment",
+ "ingredients": [{"item": "onepiece_newworld:wazamono_katana"}, {"item": "minecraft:netherite_ingot"}, {"item": "onepiece_newworld:kairoseki_shard"}, {"item": "onepiece_newworld:kairoseki_shard"}],
+ "result": {"id": "onepiece_newworld:o_wazamono_katana", "count": 1}}

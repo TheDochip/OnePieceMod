@@ -65,11 +65,55 @@ public final class ModConfig {
             .defineInRange("fruitChanceMultiplier", 1.0, 0.0, 100.0);
 
     static {
+        BUILDER.pop().push("combat");
+    }
+
+    public static final ModConfigSpec.DoubleValue MELEE_DAMAGE_MULTIPLIER = BUILDER
+            .comment("Множитель урона ударов боевой системы (кулаки и мечи)")
+            .defineInRange("meleeDamageMultiplier", 1.0, 0.0, 100.0);
+    public static final ModConfigSpec.DoubleValue WEAPON_XP_MULTIPLIER = BUILDER
+            .comment("Множитель роста мастерства оружия")
+            .defineInRange("weaponXpMultiplier", 1.0, 0.0, 100.0);
+
+    static {
+        BUILDER.pop().push("destruction");
+    }
+
+    public static final ModConfigSpec.EnumValue<DestructionMode> DESTRUCTION_MODE = BUILDER
+            .comment("Разрушение блоков летящими ударами: OFF — нет, PERMANENT — навсегда, RESTORE — блоки возвращаются через restoreSeconds")
+            .defineEnum("mode", DestructionMode.PERMANENT);
+    public static final ModConfigSpec.IntValue RESTORE_SECONDS = BUILDER
+            .comment("Через сколько секунд возвращаются блоки в режиме RESTORE")
+            .defineInRange("restoreSeconds", 120, 5, 86_400);
+    public static final ModConfigSpec.IntValue BLOCKS_PER_TICK = BUILDER
+            .comment("Сколько блоков всего могут разрушить удары за один тик в одном измерении (защита от лагов)")
+            .defineInRange("blocksPerTick", 300, 0, 5000);
+    public static final ModConfigSpec.BooleanValue DROP_BLOCKS = BUILDER
+            .comment("Выпадают ли разрубленные блоки предметами")
+            .define("dropBlocks", false);
+
+    static {
         BUILDER.pop();
     }
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private ModConfig() {
+    }
+
+    /**
+     * Значение настройки или значение по умолчанию, если конфиг сервера ещё не загружен
+     * (клиент до входа в мир, автотесты).
+     */
+    public static <T> T get(ModConfigSpec.ConfigValue<T> value) {
+        try {
+            return value.get();
+        } catch (IllegalStateException notLoaded) {
+            return value.getDefault();
+        }
+    }
+
+    public enum DestructionMode {
+        OFF, PERMANENT, RESTORE
     }
 }

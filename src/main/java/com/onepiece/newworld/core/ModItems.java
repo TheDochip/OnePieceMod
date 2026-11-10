@@ -6,6 +6,7 @@ import com.onepiece.newworld.fruits.DevilFruit;
 import com.onepiece.newworld.fruits.DevilFruitItem;
 import com.onepiece.newworld.fruits.ModFruits;
 import com.onepiece.newworld.weapons.KairosekiCuffsItem;
+import com.onepiece.newworld.weapons.KatanaItem;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.registries.Registries;
@@ -27,6 +28,9 @@ public final class ModItems {
     /** Всё, что сделано из морского камня: подавляет силы фрукта у того, кто это носит. */
     public static final TagKey<Item> KAIROSEKI_TAG = TagKey.create(Registries.ITEM, OnePieceNewWorld.id("kairoseki"));
 
+    /** Мечи для боевой системы: все ванильные мечи и мечи мода. */
+    public static final TagKey<Item> SWORDS_TAG = TagKey.create(Registries.ITEM, OnePieceNewWorld.id("swords"));
+
     /** Все предметы-фрукты: из этого списка выбирается лут в сундуках. */
     public static final List<DeferredItem<DevilFruitItem>> FRUIT_ITEMS = new ArrayList<>();
 
@@ -39,6 +43,14 @@ public final class ModItems {
     public static final DeferredItem<SwordItem> KAIROSEKI_JITTE = ITEMS.register("kairoseki_jitte",
             () -> new SwordItem(Tiers.IRON, new Item.Properties()
                     .attributes(SwordItem.createAttributes(Tiers.IRON, 3, -2.2f))));
+
+    // Катаны трёх разрядов: разряд прибавляется к силе разреза летящих ударов.
+    public static final DeferredItem<KatanaItem> KATANA = ITEMS.register("katana",
+            () -> new KatanaItem(Tiers.IRON, 1, 3, -2.2f, new Item.Properties()));
+    public static final DeferredItem<KatanaItem> WAZAMONO_KATANA = ITEMS.register("wazamono_katana",
+            () -> new KatanaItem(Tiers.DIAMOND, 2, 4, -2.1f, new Item.Properties().rarity(Rarity.UNCOMMON)));
+    public static final DeferredItem<KatanaItem> O_WAZAMONO_KATANA = ITEMS.register("o_wazamono_katana",
+            () -> new KatanaItem(Tiers.NETHERITE, 3, 5, -2.0f, new Item.Properties().rarity(Rarity.RARE).fireResistant()));
 
     public static final DeferredItem<KairosekiCuffsItem> KAIROSEKI_CUFFS = ITEMS.register("kairoseki_cuffs",
             () -> new KairosekiCuffsItem(new Item.Properties().stacksTo(16)));

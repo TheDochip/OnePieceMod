@@ -37,7 +37,8 @@ public class PlayerData {
             Codec.LONG.optionalFieldOf("bounty", 0L).forGetter(d -> d.bounty),
             Codec.INT.optionalFieldOf("merit", 0).forGetter(d -> d.merit),
             Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).optionalFieldOf("mastery", Map.of()).forGetter(d -> d.mastery),
-            Codec.unboundedMap(ResourceLocation.CODEC, Codec.LONG).optionalFieldOf("cooldowns", Map.of()).forGetter(d -> d.cooldownEnds)
+            Codec.unboundedMap(ResourceLocation.CODEC, Codec.LONG).optionalFieldOf("cooldowns", Map.of()).forGetter(d -> d.cooldownEnds),
+            Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("weapon_mastery", Map.of()).forGetter(d -> d.weaponMastery)
     ).apply(inst, PlayerData::fromSaved));
 
     public static final StreamCodec<FriendlyByteBuf, PlayerData> STREAM_CODEC =
@@ -54,6 +55,8 @@ public class PlayerData {
     private int merit;
     private final Map<ResourceLocation, Integer> mastery = new HashMap<>();
     private final Map<ResourceLocation, Long> cooldownEnds = new HashMap<>();
+    /** Мастерство боевых стилей: ключ — имя стиля (fists, katana, three_swords). */
+    private final Map<String, Integer> weaponMastery = new HashMap<>();
 
     /** Не сохраняется: после перезахода и смерти Хаки Вооружения выключено. */
     private boolean armamentActive;
@@ -68,7 +71,8 @@ public class PlayerData {
 
     private static PlayerData fromSaved(Optional<ResourceLocation> fruit, float energy, int level, int xp,
                                         Map<HakiType, Integer> haki, Faction faction, long bounty, int merit,
-                                        Map<ResourceLocation, Integer> mastery, Map<ResourceLocation, Long> cooldowns) {
+                                        Map<ResourceLocation, Integer> mastery, Map<ResourceLocation, Long> cooldowns,
+                                        Map<String, Integer> weaponMastery) {
         PlayerData data = new PlayerData();
         data.fruit = fruit.orElse(null);
         data.energy = energy;
@@ -80,6 +84,7 @@ public class PlayerData {
         data.merit = Math.max(0, merit);
         data.mastery.putAll(mastery);
         data.cooldownEnds.putAll(cooldowns);
+        data.weaponMastery.putAll(weaponMastery);
         return data;
     }
 
@@ -110,6 +115,11 @@ public class PlayerData {
             buf.writeResourceLocation(id);
             buf.writeVarLong(end);
         });
+        buf.writeVarInt(weaponMastery.size());
+        weaponMastery.forEach((style, value) -> {
+            buf.writeUtf(style);
+            buf.writeVarInt(value);
+        });
     }
 
     private static PlayerData read(FriendlyByteBuf buf) {
@@ -135,6 +145,10 @@ public class PlayerData {
         int cooldownCount = buf.readVarInt();
         for (int i = 0; i < cooldownCount; i++) {
             data.cooldownEnds.put(buf.readResourceLocation(), buf.readVarLong());
+        }
+        int weaponCount = buf.readVarInt();
+        for (int i = 0; i < weaponCount; i++) {
+            data.weaponMastery.put(buf.readUtf(), buf.readVarInt());
         }
         return data;
     }
@@ -181,6 +195,22 @@ public class PlayerData {
 
     public void setMastery(ResourceLocation fruitId, int value) {
         mastery.put(fruitId, Math.max(0, Math.min(Progression.MAX_MASTERY, value)));
+        markDirty();
+    }
+
+    // ===================== мастерство оружия =====================
+
+    public int getWeaponMastery(String style) {
+        return weaponMastery.getOrDefault(style, 0);
+    }
+
+    public void addWeaponMastery(String style, int amount) {
+        weaponMastery.merge(style, amount, (a, b) -> Math.min(Progression.MAX_WEAPON_MASTERY, a + b));
+        markDirty();
+    }
+
+    public void setWeaponMastery(String style, int value) {
+        weaponMastery.put(style, Math.max(0, Math.min(Progression.MAX_WEAPON_MASTERY, value)));
         markDirty();
     }
 

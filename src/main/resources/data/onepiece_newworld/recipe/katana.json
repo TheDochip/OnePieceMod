@@ -1,0 +1,3 @@
+{"type": "minecraft:crafting_shaped", "category": "equipment",
+ "pattern": ["  I", " I ", "S  "], "key": {"I": {"item": "minecraft:iron_ingot"}, "S": {"item": "minecraft:stick"}},
+ "result": {"id": "onepiece_newworld:katana", "count": 1}}

@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.onepiece.newworld.OnePieceNewWorld;
+import com.onepiece.newworld.combat.CombatStyle;
 import com.onepiece.newworld.fruits.DevilFruit;
 import com.onepiece.newworld.fruits.ModFruits;
 import com.onepiece.newworld.haki.HakiType;
@@ -33,6 +34,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
  * /onepiece haki &lt;игрок&gt; &lt;observation|armament|conqueror&gt; &lt;опыт&gt;
  * /onepiece level &lt;игрок&gt; &lt;уровень&gt;
  * /onepiece mastery &lt;игрок&gt; &lt;0..1000&gt;
+ * /onepiece weapon &lt;игрок&gt; &lt;fists|katana|three_swords&gt; &lt;0..1500&gt;
  * /onepiece bounty &lt;игрок&gt; &lt;сумма&gt;
  * /onepiece merit &lt;игрок&gt; &lt;заслуги&gt;
  * /onepiece faction &lt;игрок&gt; &lt;none|pirate|marine&gt;
@@ -100,6 +102,20 @@ public final class ModCommands {
                     return done(ctx.getSource(), target, Component.translatable("command.onepiece_newworld.mastery_set",
                             data.getMastery(data.getFruitId())));
                 }))));
+
+        RequiredArgumentBuilder<CommandSourceStack, EntitySelector> weaponTarget = Commands.argument("target", EntityArgument.player());
+        for (CombatStyle style : CombatStyle.values()) {
+            weaponTarget.then(Commands.literal(style.id())
+                    .then(Commands.argument("value", IntegerArgumentType.integer(0, Progression.MAX_WEAPON_MASTERY)).executes(ctx -> {
+                        ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
+                        PlayerData data = ModAttachments.get(target);
+                        data.setWeaponMastery(style.id(), IntegerArgumentType.getInteger(ctx, "value"));
+                        return done(ctx.getSource(), target, Component.translatable("command.onepiece_newworld.weapon_mastery_set",
+                                Component.translatable("hud.onepiece_newworld.style." + style.id()),
+                                data.getWeaponMastery(style.id()), Progression.weaponTier(data.getWeaponMastery(style.id())) + 1));
+                    })));
+        }
+        root.then(op("weapon").then(weaponTarget));
 
         root.then(op("bounty").then(Commands.argument("target", EntityArgument.player())
                 .then(Commands.argument("amount", LongArgumentType.longArg(0)).executes(ctx -> {

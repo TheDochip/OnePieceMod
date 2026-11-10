@@ -20,7 +20,21 @@ public final class ModEffects {
                     .addAttributeModifier(Attributes.ATTACK_DAMAGE, OnePieceNewWorld.id("effect.seastone_weak"),
                             -0.3, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
+    /** Оглушение: нельзя двигаться, прыгать и атаковать. Накладывается парированием и пробитием блока. */
+    public static final DeferredHolder<MobEffect, MobEffect> STUNNED = MOB_EFFECTS.register("stunned",
+            () -> new SimpleEffect(MobEffectCategory.HARMFUL, 0xF2D64B)
+                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, OnePieceNewWorld.id("effect.stunned_slow"),
+                            -1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .addAttributeModifier(Attributes.JUMP_STRENGTH, OnePieceNewWorld.id("effect.stunned_jump"),
+                            -1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+
     private ModEffects() {
+    }
+
+    public static final class SimpleEffect extends MobEffect {
+        SimpleEffect(MobEffectCategory category, int color) {
+            super(category, color);
+        }
     }
 
     /** Отдельный класс: конструктор MobEffect защищён. */

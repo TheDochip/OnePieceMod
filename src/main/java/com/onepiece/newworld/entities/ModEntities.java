@@ -20,6 +20,15 @@ public final class ModEntities {
                     .updateInterval(2)
                     .build("elemental_projectile"));
 
+    /** Летящий удар мечом. */
+    public static final DeferredHolder<EntityType<?>, EntityType<SlashProjectile>> SLASH =
+            ENTITY_TYPES.register("slash", () -> EntityType.Builder
+                    .<SlashProjectile>of(SlashProjectile::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .clientTrackingRange(8)
+                    .updateInterval(2)
+                    .build("slash"));
+
     /** Пират-головорез: враждебный NPC, появляется на пляжах. */
     public static final DeferredHolder<EntityType<?>, EntityType<PirateGrunt>> PIRATE_GRUNT =
             ENTITY_TYPES.register("pirate_grunt", () -> EntityType.Builder

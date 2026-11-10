@@ -1,0 +1,9 @@
+{
+  "values": [
+    {"id": "#minecraft:swords", "required": false},
+    "onepiece_newworld:katana",
+    "onepiece_newworld:wazamono_katana",
+    "onepiece_newworld:o_wazamono_katana",
+    "onepiece_newworld:kairoseki_jitte"
+  ]
+}

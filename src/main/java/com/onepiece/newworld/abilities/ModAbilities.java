@@ -1,5 +1,6 @@
 package com.onepiece.newworld.abilities;
 
+import com.onepiece.newworld.combat.SwordTechniques;
 import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.core.ModRegistries;
 import com.onepiece.newworld.fruits.gomu.GomuAbilities;
@@ -32,6 +33,11 @@ public final class ModAbilities {
     public static final DeferredHolder<Ability, Ability> HIE_ICE_SHARD = ABILITIES.register("hie_ice_shard", HieAbilities::iceShard);
     public static final DeferredHolder<Ability, Ability> HIE_ICE_AGE = ABILITIES.register("hie_ice_age", HieAbilities::iceAge);
     public static final DeferredHolder<Ability, Ability> HIE_ICE_SPEARS = ABILITIES.register("hie_ice_spears", HieAbilities::iceSpears);
+
+    // Техники меча (клавиши Z/X/C с мечом в руке)
+    public static final DeferredHolder<Ability, Ability> SWORD_FLYING_SLASH = ABILITIES.register("sword_flying_slash", SwordTechniques::flyingSlash);
+    public static final DeferredHolder<Ability, Ability> SWORD_VERTICAL_SLASH = ABILITIES.register("sword_vertical_slash", SwordTechniques::verticalSlash);
+    public static final DeferredHolder<Ability, Ability> SWORD_STORM_SLASH = ABILITIES.register("sword_storm_slash", SwordTechniques::stormSlash);
 
     private ModAbilities() {
     }

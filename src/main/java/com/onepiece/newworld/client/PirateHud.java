@@ -1,5 +1,7 @@
 package com.onepiece.newworld.client;
 
+import com.onepiece.newworld.combat.CombatStyle;
+import com.onepiece.newworld.combat.SwordTechniques;
 import com.onepiece.newworld.abilities.Ability;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.fruits.DevilFruit;
@@ -39,6 +41,7 @@ public final class PirateHud {
     private static final int COLOR_HAKI_ON = 0xFFE24A4A;
     private static final int COLOR_OBSERVATION = 0xFFC48CFF;
     private static final int COLOR_MARINE = 0xFF7FB2FF;
+    private static final int COLOR_STYLE = 0xFFE0E0E0;
 
     private PirateHud() {
     }
@@ -51,10 +54,13 @@ public final class PirateHud {
         }
         PlayerData data = ModAttachments.get(player);
         Font font = mc.font;
+        renderCombo(graphics, font);
+        CombatStyle style = CombatStyle.of(player);
+        boolean swordMode = style != null && style.usesSword() && !player.isShiftKeyDown();
         DevilFruit fruit = ModFruits.get(data.getFruitId());
         int armament = data.getHakiLevel(HakiType.ARMAMENT);
         int observation = data.getHakiLevel(HakiType.OBSERVATION);
-        boolean usesEnergy = fruit != null || armament > 0 || observation > 0;
+        boolean usesEnergy = fruit != null || armament > 0 || observation > 0 || (style != null && style.usesSword());
 
         if (!usesEnergy && data.getFaction() == Faction.NONE && data.getBounty() == 0) {
             Component hint = Component.translatable("hud.onepiece_newworld.character_hint", ModKeys.label(ModKeys.CHARACTER));
@@ -78,7 +84,20 @@ public final class PirateHud {
         if (usesEnergy) {
             rows.add(Row.bar(Row.Kind.ENERGY));
         }
-        if (fruit != null) {
+        if (style != null) {
+            int mastery = data.getWeaponMastery(style.id());
+            rows.add(Row.text(Component.translatable("hud.onepiece_newworld.style." + style.id())
+                    .append(Component.translatable("hud.onepiece_newworld.mastery_tier", Progression.weaponTier(mastery) + 1)), COLOR_STYLE));
+        }
+        if (swordMode) {
+            List<Ability> techniques = SwordTechniques.all();
+            for (int i = 0; i < techniques.size(); i++) {
+                Ability ability = techniques.get(i);
+                int cd = data.cooldownRemaining(ability.id(), now);
+                int color = cd > 0 || data.getEnergy() < ability.energyCost() ? COLOR_DIM : COLOR_TEXT;
+                rows.add(new Row(Row.Kind.TEXT, keyed(ModKeys.ABILITY_SLOTS[i], ability.displayName()), seconds(cd), color));
+            }
+        } else if (fruit != null) {
             int count = Math.min(fruit.abilityCount(), ModKeys.ABILITY_SLOTS.length);
             for (int i = 0; i < count; i++) {
                 Ability ability = fruit.ability(i);
@@ -124,6 +143,24 @@ public final class PirateHud {
             }
             cursor += row.height();
         }
+    }
+
+    /** Счётчик попаданий подряд справа от прицела. */
+    private static void renderCombo(GuiGraphics graphics, Font font) {
+        int combo = ClientCombat.visibleCombo();
+        if (combo < 2) {
+            return;
+        }
+        int alpha = Math.max(0x10, (int) (0xFF * ClientCombat.comboFreshness()));
+        Component text = Component.translatable("hud.onepiece_newworld.combo", combo);
+        int x = graphics.guiWidth() / 2 + 14;
+        int y = graphics.guiHeight() / 2 - 4;
+        graphics.pose().pushPose();
+        graphics.pose().translate(x, y, 0);
+        float scale = combo >= 10 ? 1.5f : 1.2f;
+        graphics.pose().scale(scale, scale, 1f);
+        graphics.drawString(font, text, 0, 0, (alpha << 24) | (combo >= 10 ? 0xFF5533 : 0xFFD24A), true);
+        graphics.pose().popPose();
     }
 
     private static void drawXp(GuiGraphics graphics, int x, int y, int width, PlayerData data) {

@@ -134,7 +134,14 @@ configurations {
 
 dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    implementation "com.zigythebird.playeranim:PlayerAnimationLibNeo:${player_anim_version}"
+    // Ядро библиотеки, molang и javassist уже упакованы внутрь мода (jar-in-jar),
+    // а его транзитивные зависимости конфликтуют со строгими версиями Minecraft — поэтому transitive = false.
+    implementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:${player_anim_version}") {
+        transitive = false
+    }
+    compileOnly("com.zigythebird:mochafloats:4.1.0") {
+        transitive = false
+    }
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

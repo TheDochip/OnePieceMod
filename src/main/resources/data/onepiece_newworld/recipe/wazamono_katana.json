@@ -1,0 +1,3 @@
+{"type": "minecraft:crafting_shapeless", "category": "equipment",
+ "ingredients": [{"item": "onepiece_newworld:katana"}, {"item": "minecraft:diamond"}, {"item": "minecraft:diamond"}, {"item": "onepiece_newworld:kairoseki_shard"}],
+ "result": {"id": "onepiece_newworld:wazamono_katana", "count": 1}}

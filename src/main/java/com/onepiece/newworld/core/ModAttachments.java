@@ -1,6 +1,7 @@
 package com.onepiece.newworld.core;
 
 import com.onepiece.newworld.OnePieceNewWorld;
+import com.onepiece.newworld.combat.CombatState;
 import com.onepiece.newworld.progression.PlayerData;
 import java.util.function.Supplier;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +20,19 @@ public final class ModAttachments {
                     .copyOnDeath()
                     .build());
 
+    /** Состояние боя (комбо, блок, уклонение). Живёт только в памяти: после перезахода сбрасывается. */
+    public static final Supplier<AttachmentType<CombatState>> COMBAT_STATE =
+            ATTACHMENT_TYPES.register("combat_state",
+                    () -> AttachmentType.builder(() -> new CombatState()).build());
+
     private ModAttachments() {
     }
 
     public static PlayerData get(Player player) {
         return player.getData(PLAYER_DATA);
+    }
+
+    public static CombatState combat(Player player) {
+        return player.getData(COMBAT_STATE);
     }
 }

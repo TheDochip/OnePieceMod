@@ -65,7 +65,7 @@ public final class CoreGameTests {
     @GameTest(templateNamespace = NS, template = TEMPLATE)
     public static void registriesArePopulated(GameTestHelper helper) {
         helper.assertTrue(ModFruits.REGISTRY.size() == 3, "Ожидалось 3 фрукта, а их " + ModFruits.REGISTRY.size());
-        helper.assertTrue(ModAbilities.REGISTRY.size() == 9, "Ожидалось 9 способностей, а их " + ModAbilities.REGISTRY.size());
+        helper.assertTrue(ModAbilities.REGISTRY.size() == 12, "Ожидалось 12 способностей (9 фруктов + 3 техники меча), а их " + ModAbilities.REGISTRY.size());
         for (DevilFruit fruit : ModFruits.REGISTRY) {
             helper.assertTrue(fruit.abilityCount() == 3, "У фрукта " + fruit.id() + " не 3 способности");
             for (Ability ability : fruit.abilities()) {

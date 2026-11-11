@@ -96,7 +96,7 @@ T = {
 "message.$.dodged": ("Уклонение! Хаки Наблюдения предугадало удар", "Dodged! Observation Haki foresaw the attack"),
 "message.$.haki_awakened.observation": ("Пробуждено Хаки Наблюдения! Клавиша G — импульс", "Observation Haki awakened! Press G for a pulse"),
 "message.$.haki_awakened.armament": ("Пробуждено Хаки Вооружения! Клавиша V — включить", "Armament Haki awakened! Press V to toggle"),
-"message.$.haki_awakened.conqueror": ("Пробуждено Королевское Хаки!", "Conqueror's Haki awakened!"),
+"message.$.haki_awakened.conqueror": ("Пробуждено Королевское Хаки! Клавиша H — волна воли", "Conqueror's Haki awakened! Press H to release a wave"),
 "message.$.haki_level.observation": ("Хаки Наблюдения достигло уровня %s", "Observation Haki reached level %s"),
 "message.$.haki_level.armament": ("Хаки Вооружения достигло уровня %s", "Armament Haki reached level %s"),
 "message.$.haki_level.conqueror": ("Королевское Хаки достигло уровня %s", "Conqueror's Haki reached level %s"),
@@ -176,6 +176,17 @@ T = {
 "ability.$.sword_storm_slash": ("Буря клинков", "Blade Storm"),
 "ability.$.sword_storm_slash.desc": ("Веер из трёх разрезов; с тремя мечами — огромный удар.", "A fan of three slashes; with three swords - one huge strike."),
 "command.$.weapon_mastery_set": ("%s — мастерство %s (ступень %s)", "%s - mastery %s (tier %s)"),
+"key.$.conqueror": ("Королевское Хаки (волна)", "Conqueror's Haki (wave)"),
+"effect.$.knocked_out": ("Без сознания", "Knocked Out"),
+"effect.$.haki_suppression": ("Подавление волей", "Will Suppression"),
+"hud.$.conqueror": ("Королевское %s", "Conqueror %s"),
+"message.$.haki_locked.conqueror": ("Королевское Хаки дано не каждому", "Conqueror's Haki is not granted to everyone"),
+"message.$.conqueror_wave": ("Волна Королевского Хаки! Без сознания: %s", "Conqueror's Haki wave! Knocked out: %s"),
+"message.$.conqueror_suppressed": ("Чужая воля подавила силы вашего фрукта!", "A stronger will suppressed your fruit powers!"),
+"message.$.knocked_out": ("Вы теряете сознание под чужой волей...", "You black out under an overwhelming will..."),
+"message.$.conqueror_clash": ("СТОЛКНОВЕНИЕ КОРОЛЕВСКИХ ХАКИ!", "CONQUEROR'S HAKI CLASH!"),
+"command.$.conqueror_given": ("Королевское Хаки выдано (спит до пробуждения в бою)", "Conqueror's Haki granted (dormant until awakened in battle)"),
+"command.$.conqueror_removed": ("Королевское Хаки убрано", "Conqueror's Haki removed"),
 }
 out = sys.argv[1]
 ru = {k(a): b[0] for a,b in T.items()}

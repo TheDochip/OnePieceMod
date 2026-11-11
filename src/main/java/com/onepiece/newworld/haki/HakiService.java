@@ -89,7 +89,9 @@ public final class HakiService {
             return;
         }
         if (!player.isCreative()) {
-            data.setEnergy(data.getEnergy() - ModConfig.ARMAMENT_DRAIN.get().floatValue());
+            // Покрытие Королевским Хаки удваивает расход.
+            float drain = ModConfig.ARMAMENT_DRAIN.get().floatValue() * (ConquerorService.hasCoating(player) ? 2f : 1f);
+            data.setEnergy(data.getEnergy() - drain);
         }
         if (data.getEnergy() <= 0) {
             data.setArmamentActive(false);

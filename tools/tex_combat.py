@@ -60,3 +60,19 @@ for k in range(5):
             px[x, y] = hexc(0xFFE04A) if (dx, dy) != (0, 0) else hexc(0xFFFFFF)
 im.save(f"{A}/mob_effect/stunned.png")
 print("ok")
+
+# значки эффектов Королевского Хаки 18×18
+def ring_icon(name, outer, inner):
+    im = Image.new("RGBA", (18, 18), (0, 0, 0, 0)); px = im.load()
+    for y in range(18):
+        for x in range(18):
+            d = math.hypot(x - 8.5, y - 8.5)
+            if 6.0 <= d <= 8.2:
+                px[x, y] = hexc(outer)
+            elif 3.0 <= d <= 4.6:
+                px[x, y] = hexc(inner)
+    im.save(f"{A}/mob_effect/{name}.png")
+
+ring_icon("knocked_out", 0x1A0508, 0xC21F3A)
+ring_icon("haki_suppression", 0xC21F3A, 0x2A0A10)
+print("ok2")

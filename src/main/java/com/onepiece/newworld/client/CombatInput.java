@@ -2,7 +2,7 @@ package com.onepiece.newworld.client;
 
 import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.combat.CombatStyle;
-import com.onepiece.newworld.core.ModEffects;
+import com.onepiece.newworld.combat.Incapacity;
 import com.onepiece.newworld.networking.CombatActionPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -54,7 +54,7 @@ public final class CombatInput {
             event.setCanceled(true);
             event.setSwingHand(false);
             long tick = mc.level.getGameTime();
-            if (player.hasEffect(ModEffects.STUNNED) || tick - ClientCombat.lastAttackSentTick < ATTACK_SEND_INTERVAL) {
+            if (Incapacity.check(player) || tick - ClientCombat.lastAttackSentTick < ATTACK_SEND_INTERVAL) {
                 return;
             }
             ClientCombat.lastAttackSentTick = tick;

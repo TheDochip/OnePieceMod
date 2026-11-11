@@ -1,5 +1,8 @@
 package com.onepiece.newworld.progression;
 
+import com.onepiece.newworld.haki.HakiService;
+import com.onepiece.newworld.haki.HakiType;
+import com.onepiece.newworld.haki.Willpower;
 import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.entities.MarineRecruit;
@@ -31,6 +34,10 @@ public final class ProgressionEvents {
             return;
         }
         ProgressionService.grantXp(killer, xpFor(victim));
+        // Королевское Хаки растёт за победы над теми, чья воля сильнее.
+        if (ModAttachments.get(killer).getHakiLevel(HakiType.CONQUEROR) > 0 && Willpower.of(victim) > Willpower.of(killer)) {
+            HakiService.grantXp(killer, HakiType.CONQUEROR, 20);
+        }
 
         PlayerData killerData = ModAttachments.get(killer);
         if (killerData.getFaction() == Faction.MARINE) {

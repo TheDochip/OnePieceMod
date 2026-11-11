@@ -38,7 +38,9 @@ public class PlayerData {
             Codec.INT.optionalFieldOf("merit", 0).forGetter(d -> d.merit),
             Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).optionalFieldOf("mastery", Map.of()).forGetter(d -> d.mastery),
             Codec.unboundedMap(ResourceLocation.CODEC, Codec.LONG).optionalFieldOf("cooldowns", Map.of()).forGetter(d -> d.cooldownEnds),
-            Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("weapon_mastery", Map.of()).forGetter(d -> d.weaponMastery)
+            Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("weapon_mastery", Map.of()).forGetter(d -> d.weaponMastery),
+            Codec.BOOL.optionalFieldOf("conqueror_rolled", false).forGetter(d -> d.conquerorRolled),
+            Codec.BOOL.optionalFieldOf("conqueror_innate", false).forGetter(d -> d.conquerorInnate)
     ).apply(inst, PlayerData::fromSaved));
 
     public static final StreamCodec<FriendlyByteBuf, PlayerData> STREAM_CODEC =
@@ -58,6 +60,14 @@ public class PlayerData {
     /** Мастерство боевых стилей: ключ — имя стиля (fists, katana, three_swords). */
     private final Map<String, Integer> weaponMastery = new HashMap<>();
 
+    /** Шанс на Королевское Хаки уже разыгран (один раз за жизнь персонажа). */
+    private boolean conquerorRolled;
+    /**
+     * Королевское Хаки дано от рождения. Пока не пробуждено (опыт 0), игрок о нём не знает:
+     * поле не отправляется клиенту.
+     */
+    private boolean conquerorInnate;
+
     /** Не сохраняется: после перезахода и смерти Хаки Вооружения выключено. */
     private boolean armamentActive;
 
@@ -72,7 +82,7 @@ public class PlayerData {
     private static PlayerData fromSaved(Optional<ResourceLocation> fruit, float energy, int level, int xp,
                                         Map<HakiType, Integer> haki, Faction faction, long bounty, int merit,
                                         Map<ResourceLocation, Integer> mastery, Map<ResourceLocation, Long> cooldowns,
-                                        Map<String, Integer> weaponMastery) {
+                                        Map<String, Integer> weaponMastery, boolean conquerorRolled, boolean conquerorInnate) {
         PlayerData data = new PlayerData();
         data.fruit = fruit.orElse(null);
         data.energy = energy;
@@ -85,6 +95,8 @@ public class PlayerData {
         data.mastery.putAll(mastery);
         data.cooldownEnds.putAll(cooldowns);
         data.weaponMastery.putAll(weaponMastery);
+        data.conquerorRolled = conquerorRolled;
+        data.conquerorInnate = conquerorInnate;
         return data;
     }
 
@@ -294,6 +306,10 @@ public class PlayerData {
 
     public void setHakiXp(HakiType type, int value) {
         hakiXp.put(type, Math.max(0, value));
+        if (type == HakiType.CONQUEROR && value > 0) {
+            conquerorInnate = true;
+            conquerorRolled = true;
+        }
         markDirty();
     }
 
@@ -302,6 +318,31 @@ public class PlayerData {
         int before = getHakiLevel(type);
         setHakiXp(type, getHakiXp(type) + amount);
         return getHakiLevel(type) > before;
+    }
+
+    public boolean isConquerorRolled() {
+        return conquerorRolled;
+    }
+
+    public void setConquerorRolled(boolean rolled) {
+        conquerorRolled = rolled;
+    }
+
+    /** Есть ли у персонажа Королевское Хаки (спящее или пробуждённое). */
+    public boolean hasConqueror() {
+        return conquerorInnate || getHakiXp(HakiType.CONQUEROR) > 0;
+    }
+
+    public void setConquerorInnate(boolean innate) {
+        conquerorInnate = innate;
+        markDirty();
+    }
+
+    /** Полностью убрать Королевское Хаки (команда оператора). */
+    public void removeConqueror() {
+        conquerorInnate = false;
+        hakiXp.remove(HakiType.CONQUEROR);
+        markDirty();
     }
 
     public boolean isArmamentActive() {

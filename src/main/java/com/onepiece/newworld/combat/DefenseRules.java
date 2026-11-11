@@ -3,6 +3,8 @@ package com.onepiece.newworld.combat;
 import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.core.ModEffects;
+import com.onepiece.newworld.haki.ConquerorService;
+import com.onepiece.newworld.haki.Willpower;
 import com.onepiece.newworld.progression.PlayerData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -56,7 +58,7 @@ public final class DefenseRules {
 
         // Оглушённый не может бить в ближнем бою.
         if (attacker instanceof LivingEntity living && source.getDirectEntity() == attacker
-                && living.hasEffect(ModEffects.STUNNED)) {
+                && Incapacity.check(living)) {
             event.setCanceled(true);
             return;
         }
@@ -71,6 +73,11 @@ public final class DefenseRules {
             return;
         }
         if (!state.isBlocking() || source.is(DamageTypeTags.BYPASSES_SHIELD) || !isFrontal(player, source)) {
+            return;
+        }
+        // Покрытие Королевским Хаки пробивает блок того, чья воля слабее.
+        if (attacker instanceof Player attackerPlayer && ConquerorService.hasCoating(attackerPlayer)
+                && Willpower.of(attackerPlayer) > Willpower.of(player)) {
             return;
         }
         CombatStyle style = CombatStyle.of(player);

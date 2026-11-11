@@ -16,10 +16,11 @@ public final class ModKeys {
     public static final KeyMapping OBSERVATION = key("observation", GLFW.GLFW_KEY_G);
     public static final KeyMapping CHARACTER = key("character", GLFW.GLFW_KEY_K);
     public static final KeyMapping DODGE = key("dodge", GLFW.GLFW_KEY_LEFT_ALT);
+    public static final KeyMapping CONQUEROR = key("conqueror", GLFW.GLFW_KEY_H);
 
     /** Клавиши слотов способностей по порядку. */
     public static final KeyMapping[] ABILITY_SLOTS = {ABILITY_1, ABILITY_2, ABILITY_3};
-    public static final KeyMapping[] ALL = {ABILITY_1, ABILITY_2, ABILITY_3, ARMAMENT, OBSERVATION, CHARACTER, DODGE};
+    public static final KeyMapping[] ALL = {ABILITY_1, ABILITY_2, ABILITY_3, ARMAMENT, OBSERVATION, CHARACTER, DODGE, CONQUEROR};
 
     private ModKeys() {
     }

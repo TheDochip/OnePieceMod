@@ -42,6 +42,13 @@ public final class ModConfig {
             .comment("Множитель опыта Хаки")
             .defineInRange("xpMultiplier", 1.0, 0.0, 100.0);
 
+    public static final ModConfigSpec.DoubleValue CONQUEROR_CHANCE = BUILDER
+            .comment("Шанс получить Королевское Хаки при первом входе в мир (0.01 = 1%)")
+            .defineInRange("conquerorChance", 0.01, 0.0, 1.0);
+    public static final ModConfigSpec.BooleanValue CONQUEROR_GROUND_CRACKS = BUILDER
+            .comment("Трещины на земле при столкновении Королевских Хаки (возвращаются через 30 секунд)")
+            .define("conquerorGroundCracks", true);
+
     static {
         BUILDER.pop().push("progression");
     }

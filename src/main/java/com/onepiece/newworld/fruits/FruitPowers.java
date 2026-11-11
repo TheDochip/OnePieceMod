@@ -17,9 +17,10 @@ public final class FruitPowers {
         return ModFruits.get(ModAttachments.get(player).getFruitId());
     }
 
-    /** Силы заблокированы: игрок в воде, под эффектом морского камня или носит кайросеки. */
+    /** Силы заблокированы: игрок в воде, под морским камнем или подавлением Королевского Хаки, без сознания или носит кайросеки. */
     public static boolean isSuppressed(Player player) {
-        return player.isInWater() || player.hasEffect(ModEffects.SEASTONE) || carriesKairoseki(player);
+        return player.isInWater() || player.hasEffect(ModEffects.SEASTONE) || player.hasEffect(ModEffects.HAKI_SUPPRESSION)
+                || player.hasEffect(ModEffects.KNOCKED_OUT) || carriesKairoseki(player);
     }
 
     public static boolean carriesKairoseki(Player player) {

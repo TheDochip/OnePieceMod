@@ -4,6 +4,7 @@ import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.core.ModConfig;
 import com.onepiece.newworld.core.ModEffects;
+import com.onepiece.newworld.haki.ConquerorService;
 import com.onepiece.newworld.networking.PlayAnimationPayload;
 import com.onepiece.newworld.progression.PlayerData;
 import com.onepiece.newworld.progression.Progression;
@@ -70,7 +71,7 @@ public final class CombatService {
      */
     public static boolean attack(Player player, boolean heavy) {
         if (!(player.level() instanceof ServerLevel level) || player.isSpectator() || !player.isAlive()
-                || player.hasEffect(ModEffects.STUNNED)) {
+                || Incapacity.check(player)) {
             return false;
         }
         CombatStyle style = CombatStyle.of(player);
@@ -110,7 +111,12 @@ public final class CombatService {
         state.counterUntil = 0;
 
         float base = baseDamage(player, style, data) * attack.damage() * (counter ? COUNTER_BONUS : 1f);
-        double reach = player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE) + attack.extraReach();
+        boolean coated = ConquerorService.hasCoating(player);
+        if (coated) {
+            base *= ConquerorService.COATING_DAMAGE;
+        }
+        double reach = player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE) + attack.extraReach()
+                + (coated ? ConquerorService.COATING_REACH : 0);
         DamageSource source = player.damageSources().playerAttack(player);
         ItemStack weapon = player.getMainHandItem();
 
@@ -235,7 +241,7 @@ public final class CombatService {
     // ===================== блок =====================
 
     public static boolean startBlocking(Player player) {
-        if (!(player.level() instanceof ServerLevel level) || !player.isAlive() || player.hasEffect(ModEffects.STUNNED)) {
+        if (!(player.level() instanceof ServerLevel level) || !player.isAlive() || Incapacity.check(player)) {
             return false;
         }
         CombatStyle style = CombatStyle.of(player);
@@ -274,7 +280,7 @@ public final class CombatService {
      */
     public static boolean dodge(Player player, float dirX, float dirZ) {
         if (!(player.level() instanceof ServerLevel level) || !player.isAlive() || player.isSpectator()
-                || player.hasEffect(ModEffects.STUNNED)) {
+                || Incapacity.check(player)) {
             return false;
         }
         CombatState state = ModAttachments.combat(player);
@@ -322,7 +328,7 @@ public final class CombatService {
         if (player.onGround()) {
             state.airDashUsed = false;
         }
-        if (state.isBlocking() && (CombatStyle.of(player) == null || player.hasEffect(ModEffects.STUNNED) || !player.isAlive())) {
+        if (state.isBlocking() && (CombatStyle.of(player) == null || Incapacity.check(player) || !player.isAlive())) {
             stopBlocking(player);
         }
         if (state.hitStreak > 0 && player.level().getGameTime() > state.comboExpires + 20) {

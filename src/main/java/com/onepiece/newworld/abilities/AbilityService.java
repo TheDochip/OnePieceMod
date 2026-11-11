@@ -1,6 +1,7 @@
 package com.onepiece.newworld.abilities;
 
 import com.onepiece.newworld.combat.CombatStyle;
+import com.onepiece.newworld.combat.Incapacity;
 import com.onepiece.newworld.combat.SwordTechniques;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.core.ModConfig;
@@ -22,7 +23,7 @@ public final class AbilityService {
     }
 
     public static void tryActivate(ServerPlayer player, int slot) {
-        if (player.isSpectator() || !player.isAlive()) {
+        if (player.isSpectator() || !player.isAlive() || Incapacity.check(player)) {
             return;
         }
         // С мечом в руке клавиши отдают техникам меча; с Shift — способностям фрукта.

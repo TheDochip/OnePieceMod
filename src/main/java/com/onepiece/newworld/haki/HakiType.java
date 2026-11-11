@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
 
-/** Три вида Хаки. Королевское хранится в данных уже сейчас, его механики появятся в Фазе 3. */
+/** Три вида Хаки: Наблюдение, Вооружение и Королевское (только у избранных, см. ConquerorService). */
 public enum HakiType implements StringRepresentable {
     OBSERVATION,
     ARMAMENT,
@@ -25,6 +25,11 @@ public enum HakiType implements StringRepresentable {
 
     public MutableComponent displayName() {
         return Component.translatable("haki.onepiece_newworld." + getSerializedName());
+    }
+
+    /** Опыт, с которого начинается уровень 1..5. */
+    public static int thresholdFor(int level) {
+        return level <= 0 ? 0 : THRESHOLDS[Math.min(level, MAX_LEVEL) - 1];
     }
 
     public static int levelFor(int xp) {

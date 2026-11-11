@@ -7,7 +7,6 @@ import com.onepiece.newworld.abilities.ModAbilities;
 import com.onepiece.newworld.abilities.SimpleAbility;
 import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.core.ModConfig;
-import com.onepiece.newworld.core.ModEffects;
 import com.onepiece.newworld.entities.SlashProjectile;
 import com.onepiece.newworld.networking.PlayerSync;
 import com.onepiece.newworld.progression.PlayerData;
@@ -94,7 +93,7 @@ public final class SwordTechniques {
     /** Серверная проверка и запуск техники в слоте 0..2. */
     public static void tryUse(ServerPlayer player, CombatStyle style, int slot) {
         List<Ability> techniques = all();
-        if (slot < 0 || slot >= techniques.size() || !player.isAlive() || player.hasEffect(ModEffects.STUNNED)) {
+        if (slot < 0 || slot >= techniques.size() || !player.isAlive() || Incapacity.check(player)) {
             return;
         }
         Ability ability = techniques.get(slot);

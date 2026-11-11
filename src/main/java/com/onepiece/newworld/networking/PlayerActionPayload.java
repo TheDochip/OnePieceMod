@@ -15,7 +15,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  */
 public record PlayerActionPayload(Action action, int slot) implements CustomPacketPayload {
     public enum Action {
-        ABILITY, TOGGLE_ARMAMENT, OBSERVATION_PULSE;
+        ABILITY, TOGGLE_ARMAMENT, OBSERVATION_PULSE, CONQUEROR_WAVE;
 
         static Action byId(int id) {
             Action[] values = values();

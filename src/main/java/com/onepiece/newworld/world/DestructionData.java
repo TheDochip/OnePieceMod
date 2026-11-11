@@ -2,6 +2,7 @@ package com.onepiece.newworld.world;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -27,7 +28,8 @@ public class DestructionData extends SavedData {
     /** Если чанк не загружен, повторная попытка через 10 секунд. */
     private static final int RETRY_DELAY = 200;
 
-    private record Entry(BlockPos pos, BlockState state, long restoreAt) {
+    /** @param placed что поставлено на место блока (null — воздух); блок вернётся, только если там всё ещё это */
+    private record Entry(BlockPos pos, BlockState state, @Nullable BlockState placed, long restoreAt) {
     }
 
     private final Deque<Entry> queue = new ArrayDeque<>();
@@ -38,7 +40,12 @@ public class DestructionData extends SavedData {
     }
 
     public void remember(BlockPos pos, BlockState state, long restoreAt) {
-        queue.addLast(new Entry(pos.immutable(), state, restoreAt));
+        remember(pos, state, null, restoreAt);
+    }
+
+    /** Запомнить блок, на место которого временно поставлен другой (например, потрескавшаяся земля). */
+    public void remember(BlockPos pos, BlockState state, @Nullable BlockState placed, long restoreAt) {
+        queue.addLast(new Entry(pos.immutable(), state, placed, restoreAt));
         setDirty();
     }
 
@@ -56,11 +63,11 @@ public class DestructionData extends SavedData {
             Entry entry = queue.pollFirst();
             restored++;
             if (!level.isLoaded(entry.pos())) {
-                queue.addLast(new Entry(entry.pos(), entry.state(), now + RETRY_DELAY));
+                queue.addLast(new Entry(entry.pos(), entry.state(), entry.placed(), now + RETRY_DELAY));
                 continue;
             }
             BlockState current = level.getBlockState(entry.pos());
-            if (current.isAir() || current.canBeReplaced()) {
+            if (current.isAir() || current.canBeReplaced() || current == entry.placed()) {
                 level.setBlock(entry.pos(), entry.state(), Block.UPDATE_ALL);
             }
         }
@@ -77,6 +84,9 @@ public class DestructionData extends SavedData {
             item.putLong("pos", entry.pos().asLong());
             item.put("state", NbtUtils.writeBlockState(entry.state()));
             item.putLong("at", entry.restoreAt());
+            if (entry.placed() != null) {
+                item.put("placed", NbtUtils.writeBlockState(entry.placed()));
+            }
             list.add(item);
         }
         tag.put("blocks", list);
@@ -88,8 +98,9 @@ public class DestructionData extends SavedData {
         HolderGetter<Block> blocks = registries.lookupOrThrow(Registries.BLOCK);
         for (Tag raw : tag.getList("blocks", Tag.TAG_COMPOUND)) {
             CompoundTag item = (CompoundTag) raw;
+            BlockState placed = item.contains("placed") ? NbtUtils.readBlockState(blocks, item.getCompound("placed")) : null;
             data.queue.addLast(new Entry(BlockPos.of(item.getLong("pos")),
-                    NbtUtils.readBlockState(blocks, item.getCompound("state")), item.getLong("at")));
+                    NbtUtils.readBlockState(blocks, item.getCompound("state")), placed, item.getLong("at")));
         }
         return data;
     }

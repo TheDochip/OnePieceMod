@@ -32,6 +32,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
  * /onepiece info [игрок]
  * /onepiece fruit &lt;игрок&gt; &lt;id фрукта|none&gt;
  * /onepiece haki &lt;игрок&gt; &lt;observation|armament|conqueror&gt; &lt;опыт&gt;
+ * /onepiece conqueror &lt;игрок&gt; &lt;give|awaken|remove&gt;
  * /onepiece level &lt;игрок&gt; &lt;уровень&gt;
  * /onepiece mastery &lt;игрок&gt; &lt;0..1000&gt;
  * /onepiece weapon &lt;игрок&gt; &lt;fists|katana|three_swords&gt; &lt;0..1500&gt;
@@ -80,6 +81,29 @@ public final class ModCommands {
                     })));
         }
         root.then(op("haki").then(hakiTarget));
+
+        // /onepiece conqueror <игрок> give|awaken|remove — выдать спящее, пробудить или забрать Королевское Хаки
+        root.then(op("conqueror").then(Commands.argument("target", EntityArgument.player())
+                .then(Commands.literal("give").executes(ctx -> {
+                    ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
+                    ModAttachments.get(target).setConquerorInnate(true);
+                    ModAttachments.get(target).setConquerorRolled(true);
+                    return done(ctx.getSource(), target, Component.translatable("command.onepiece_newworld.conqueror_given"));
+                }))
+                .then(Commands.literal("awaken").executes(ctx -> {
+                    ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
+                    PlayerData data = ModAttachments.get(target);
+                    if (data.getHakiLevel(HakiType.CONQUEROR) == 0) {
+                        data.setHakiXp(HakiType.CONQUEROR, HakiType.thresholdFor(1));
+                    }
+                    return done(ctx.getSource(), target, Component.translatable("command.onepiece_newworld.haki_set",
+                            HakiType.CONQUEROR.displayName(), data.getHakiXp(HakiType.CONQUEROR), data.getHakiLevel(HakiType.CONQUEROR)));
+                }))
+                .then(Commands.literal("remove").executes(ctx -> {
+                    ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
+                    ModAttachments.get(target).removeConqueror();
+                    return done(ctx.getSource(), target, Component.translatable("command.onepiece_newworld.conqueror_removed"));
+                }))));
 
         root.then(op("level").then(Commands.argument("target", EntityArgument.player())
                 .then(Commands.argument("level", IntegerArgumentType.integer(1, Progression.MAX_LEVEL)).executes(ctx -> {

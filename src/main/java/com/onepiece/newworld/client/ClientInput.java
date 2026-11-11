@@ -33,6 +33,9 @@ public final class ClientInput {
         while (ModKeys.OBSERVATION.consumeClick()) {
             send(PlayerActionPayload.Action.OBSERVATION_PULSE, 0);
         }
+        while (ModKeys.CONQUEROR.consumeClick()) {
+            send(PlayerActionPayload.Action.CONQUEROR_WAVE, 0);
+        }
         while (ModKeys.CHARACTER.consumeClick()) {
             mc.setScreen(new CharacterScreen());
         }

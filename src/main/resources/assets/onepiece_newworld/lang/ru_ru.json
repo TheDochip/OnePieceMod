@@ -84,7 +84,7 @@
   "message.onepiece_newworld.dodged": "Уклонение! Хаки Наблюдения предугадало удар",
   "message.onepiece_newworld.haki_awakened.observation": "Пробуждено Хаки Наблюдения! Клавиша G — импульс",
   "message.onepiece_newworld.haki_awakened.armament": "Пробуждено Хаки Вооружения! Клавиша V — включить",
-  "message.onepiece_newworld.haki_awakened.conqueror": "Пробуждено Королевское Хаки!",
+  "message.onepiece_newworld.haki_awakened.conqueror": "Пробуждено Королевское Хаки! Клавиша H — волна воли",
   "message.onepiece_newworld.haki_level.observation": "Хаки Наблюдения достигло уровня %s",
   "message.onepiece_newworld.haki_level.armament": "Хаки Вооружения достигло уровня %s",
   "message.onepiece_newworld.haki_level.conqueror": "Королевское Хаки достигло уровня %s",
@@ -159,5 +159,16 @@
   "ability.onepiece_newworld.sword_vertical_slash.desc": "Широкий разрез сверху вниз, рассекает стены.",
   "ability.onepiece_newworld.sword_storm_slash": "Буря клинков",
   "ability.onepiece_newworld.sword_storm_slash.desc": "Веер из трёх разрезов; с тремя мечами — огромный удар.",
-  "command.onepiece_newworld.weapon_mastery_set": "%s — мастерство %s (ступень %s)"
+  "command.onepiece_newworld.weapon_mastery_set": "%s — мастерство %s (ступень %s)",
+  "key.onepiece_newworld.conqueror": "Королевское Хаки (волна)",
+  "effect.onepiece_newworld.knocked_out": "Без сознания",
+  "effect.onepiece_newworld.haki_suppression": "Подавление волей",
+  "hud.onepiece_newworld.conqueror": "Королевское %s",
+  "message.onepiece_newworld.haki_locked.conqueror": "Королевское Хаки дано не каждому",
+  "message.onepiece_newworld.conqueror_wave": "Волна Королевского Хаки! Без сознания: %s",
+  "message.onepiece_newworld.conqueror_suppressed": "Чужая воля подавила силы вашего фрукта!",
+  "message.onepiece_newworld.knocked_out": "Вы теряете сознание под чужой волей...",
+  "message.onepiece_newworld.conqueror_clash": "СТОЛКНОВЕНИЕ КОРОЛЕВСКИХ ХАКИ!",
+  "command.onepiece_newworld.conqueror_given": "Королевское Хаки выдано (спит до пробуждения в бою)",
+  "command.onepiece_newworld.conqueror_removed": "Королевское Хаки убрано"
 }

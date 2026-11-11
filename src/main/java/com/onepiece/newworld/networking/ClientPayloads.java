@@ -10,11 +10,22 @@ public final class ClientPayloads {
     private static Consumer<PlayAnimationPayload> animationHandler = payload -> {
     };
 
+    private static Consumer<ScreenShakePayload> shakeHandler = payload -> {
+    };
+
     private ClientPayloads() {
     }
 
     public static void setAnimationHandler(Consumer<PlayAnimationPayload> handler) {
         animationHandler = handler;
+    }
+
+    public static void setShakeHandler(Consumer<ScreenShakePayload> handler) {
+        shakeHandler = handler;
+    }
+
+    static void handleShake(ScreenShakePayload payload) {
+        shakeHandler.accept(payload);
     }
 
     static void handleAnimation(PlayAnimationPayload payload) {

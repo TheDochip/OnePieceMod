@@ -1,5 +1,8 @@
 package com.onepiece.newworld.core;
 
+import com.onepiece.newworld.haki.ConquerorService;
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import com.onepiece.newworld.OnePieceNewWorld;
 import com.onepiece.newworld.fruits.DevilFruit;
 import com.onepiece.newworld.fruits.FruitPowers;
@@ -81,8 +84,23 @@ public final class PlayerLifecycle {
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
+            ConquerorService.rollOnFirstJoin(player);
             ProgressionService.applyLevelHealth(player, ModAttachments.get(player));
             PlayerSync.sync(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        ConquerorService.forget(event.getEntity());
+    }
+
+    /** Спящее Королевское Хаки просыпается, когда в бою здоровье падает ниже 20%. */
+    @SubscribeEvent
+    public static void onDamaged(LivingDamageEvent.Post event) {
+        if (event.getEntity() instanceof Player player && !player.level().isClientSide
+                && event.getSource().getEntity() instanceof LivingEntity attacker && attacker != player) {
+            ConquerorService.tryAwaken(player);
         }
     }
 

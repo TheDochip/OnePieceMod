@@ -7,6 +7,7 @@ import com.onepiece.newworld.core.ModAttachments;
 import com.onepiece.newworld.fruits.DevilFruit;
 import com.onepiece.newworld.fruits.FruitPowers;
 import com.onepiece.newworld.fruits.ModFruits;
+import com.onepiece.newworld.haki.ConquerorService;
 import com.onepiece.newworld.haki.HakiService;
 import com.onepiece.newworld.haki.HakiType;
 import com.onepiece.newworld.progression.Faction;
@@ -42,6 +43,7 @@ public final class PirateHud {
     private static final int COLOR_OBSERVATION = 0xFFC48CFF;
     private static final int COLOR_MARINE = 0xFF7FB2FF;
     private static final int COLOR_STYLE = 0xFFE0E0E0;
+    private static final int COLOR_CONQUEROR = 0xFFE0475B;
 
     private PirateHud() {
     }
@@ -60,7 +62,7 @@ public final class PirateHud {
         DevilFruit fruit = ModFruits.get(data.getFruitId());
         int armament = data.getHakiLevel(HakiType.ARMAMENT);
         int observation = data.getHakiLevel(HakiType.OBSERVATION);
-        boolean usesEnergy = fruit != null || armament > 0 || observation > 0 || (style != null && style.usesSword());
+        boolean usesEnergy = fruit != null || armament > 0 || observation > 0 || data.getHakiLevel(HakiType.CONQUEROR) > 0 || (style != null && style.usesSword());
 
         if (!usesEnergy && data.getFaction() == Faction.NONE && data.getBounty() == 0) {
             Component hint = Component.translatable("hud.onepiece_newworld.character_hint", ModKeys.label(ModKeys.CHARACTER));
@@ -116,6 +118,12 @@ public final class PirateHud {
             int cd = data.cooldownRemaining(HakiService.OBSERVATION_COOLDOWN_ID, now);
             rows.add(new Row(Row.Kind.TEXT, keyed(ModKeys.OBSERVATION, Component.translatable("hud.onepiece_newworld.observation", observation)),
                     seconds(cd), cd > 0 ? COLOR_DIM : COLOR_OBSERVATION));
+        }
+        int conqueror = data.getHakiLevel(HakiType.CONQUEROR);
+        if (conqueror > 0) {
+            int cd = data.cooldownRemaining(ConquerorService.WAVE_COOLDOWN_ID, now);
+            rows.add(new Row(Row.Kind.TEXT, keyed(ModKeys.CONQUEROR, Component.translatable("hud.onepiece_newworld.conqueror", conqueror)),
+                    seconds(cd), cd > 0 ? COLOR_DIM : COLOR_CONQUEROR));
         }
         if (data.getFaction() == Faction.MARINE) {
             rows.add(Row.text(Progression.marineRankName(data.getMerit()), COLOR_MARINE));

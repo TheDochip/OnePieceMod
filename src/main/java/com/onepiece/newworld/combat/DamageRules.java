@@ -6,6 +6,7 @@ import com.onepiece.newworld.core.ModEffects;
 import com.onepiece.newworld.core.ModItems;
 import com.onepiece.newworld.fruits.DevilFruit;
 import com.onepiece.newworld.fruits.FruitPowers;
+import com.onepiece.newworld.haki.ConquerorService;
 import com.onepiece.newworld.haki.HakiService;
 import com.onepiece.newworld.haki.HakiType;
 import com.onepiece.newworld.progression.PlayerData;
@@ -62,6 +63,13 @@ public final class DamageRules {
         if (data.isArmamentActive()) {
             event.setAmount(event.getAmount() * (1f + ARMAMENT_BONUS_PER_LEVEL * data.getHakiLevel(HakiType.ARMAMENT)));
         }
+        // Королевское 5 + Вооружение: каждый приём оглушает на секунду.
+        if (ConquerorService.hasMasterCoating(attacker) && !victim.hasEffect(ModEffects.STUNNED)) {
+            victim.addEffect(new MobEffectInstance(ModEffects.STUNNED, 20, 0, false, true), attacker);
+        }
+        if (melee && victim instanceof Player victimPlayer && ConquerorService.hasCoating(attacker)) {
+            ConquerorService.onCoatedHit(attacker, victimPlayer);
+        }
         if (melee) {
             if (attacker.getMainHandItem().is(ModItems.KAIROSEKI_TAG)) {
                 victim.addEffect(new MobEffectInstance(ModEffects.SEASTONE, 100, 0));
@@ -95,6 +103,16 @@ public final class DamageRules {
             }
         }
 
+        // Закалка Вооружением: включённое Вооружение принимает удар на себя (5% за уровень, до 25%),
+        // но Вооружение нападающего снимает часть защиты.
+        if (fromLiving && data.isArmamentActive()) {
+            int defence = data.getHakiLevel(HakiType.ARMAMENT);
+            int offence = attacker instanceof Player attackerPlayer && ModAttachments.get(attackerPlayer).isArmamentActive()
+                    ? ModAttachments.get(attackerPlayer).getHakiLevel(HakiType.ARMAMENT) : 0;
+            float reduction = Math.max(0f, Math.min(0.25f, 0.05f * (defence - offence)));
+            event.setAmount(event.getAmount() * (1f - reduction));
+        }
+
         if (fromLiving) {
             int observation = data.getHakiLevel(HakiType.OBSERVATION);
             if (observation > 0 && data.getEnergy() >= 5f && victim.getRandom().nextFloat() < 0.04f * observation) {
@@ -116,6 +134,7 @@ public final class DamageRules {
         if (attacker instanceof LivingEntity living && living.getMainHandItem().is(ModItems.KAIROSEKI_TAG)) {
             return true;
         }
+        // Вооружение пробивает Логию; Королевское 5 — тем более.
         return attacker instanceof Player player && ModAttachments.get(player).isArmamentActive();
     }
 }

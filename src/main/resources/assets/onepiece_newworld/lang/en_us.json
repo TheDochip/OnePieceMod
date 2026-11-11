@@ -84,7 +84,7 @@
   "message.onepiece_newworld.dodged": "Dodged! Observation Haki foresaw the attack",
   "message.onepiece_newworld.haki_awakened.observation": "Observation Haki awakened! Press G for a pulse",
   "message.onepiece_newworld.haki_awakened.armament": "Armament Haki awakened! Press V to toggle",
-  "message.onepiece_newworld.haki_awakened.conqueror": "Conqueror's Haki awakened!",
+  "message.onepiece_newworld.haki_awakened.conqueror": "Conqueror's Haki awakened! Press H to release a wave",
   "message.onepiece_newworld.haki_level.observation": "Observation Haki reached level %s",
   "message.onepiece_newworld.haki_level.armament": "Armament Haki reached level %s",
   "message.onepiece_newworld.haki_level.conqueror": "Conqueror's Haki reached level %s",
@@ -159,5 +159,16 @@
   "ability.onepiece_newworld.sword_vertical_slash.desc": "A wide top-down slash that splits walls.",
   "ability.onepiece_newworld.sword_storm_slash": "Blade Storm",
   "ability.onepiece_newworld.sword_storm_slash.desc": "A fan of three slashes; with three swords - one huge strike.",
-  "command.onepiece_newworld.weapon_mastery_set": "%s - mastery %s (tier %s)"
+  "command.onepiece_newworld.weapon_mastery_set": "%s - mastery %s (tier %s)",
+  "key.onepiece_newworld.conqueror": "Conqueror's Haki (wave)",
+  "effect.onepiece_newworld.knocked_out": "Knocked Out",
+  "effect.onepiece_newworld.haki_suppression": "Will Suppression",
+  "hud.onepiece_newworld.conqueror": "Conqueror %s",
+  "message.onepiece_newworld.haki_locked.conqueror": "Conqueror's Haki is not granted to everyone",
+  "message.onepiece_newworld.conqueror_wave": "Conqueror's Haki wave! Knocked out: %s",
+  "message.onepiece_newworld.conqueror_suppressed": "A stronger will suppressed your fruit powers!",
+  "message.onepiece_newworld.knocked_out": "You black out under an overwhelming will...",
+  "message.onepiece_newworld.conqueror_clash": "CONQUEROR'S HAKI CLASH!",
+  "command.onepiece_newworld.conqueror_given": "Conqueror's Haki granted (dormant until awakened in battle)",
+  "command.onepiece_newworld.conqueror_removed": "Conqueror's Haki removed"
 }
